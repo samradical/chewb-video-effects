@@ -1,0 +1,52 @@
+{
+  "name": "@samelie/video-effects",
+  "description": "",
+  "homepage": "",
+  "author": "Sam Elie <samradelie@gmail.com>",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": ".git",
+    "web": "/"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "gl-matrix": "^2.3.2",
+    "scheduling": "^1.0.3"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-preset-stage-1": "^6.3.13",
+    "babelify": "^7.2.0",
+    "browserify": "^11.1.0",
+    "glslify": "^5.1.0"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015",
+            "stage-1"
+          ]
+        },
+        "glslify"
+      ]
+    ]
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "/issues"
+  },
+  "engines": {
+    "node": ">=5.0.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "/raw/master/LICENSE"
+    }
+  ]
+}
