@@ -17,10 +17,9 @@ export default class VideoKeyScene extends Scene {
     this.video1 = video1
     this.video1.width = this._width
     this.video1.height = this._height
-    this.video2 = video2
+    this.video2 = video2 || video1
     this.video2.width = this._width
     this.video2.height = this._height
-
     this.$targetCanvas = targetCanvas
     this.$targetCanvas.width = this._width
     this.$targetCanvas.height = this._height
@@ -31,6 +30,7 @@ export default class VideoKeyScene extends Scene {
     this._view = new VideoView()
     this.fbo = new FrameBuffer(this._width, this._height);
     this._c = 0
+    this._time = 0
 
     this._initImageDatas()
     if (this.options.fullscreen) {
@@ -40,6 +40,7 @@ export default class VideoKeyScene extends Scene {
 
   _initImageDatas() {
     this._readPixelData = new Uint8Array(this._width * this._height * 4);
+    this._readPixelData2 = new Uint8Array(this._width * this._height * 3);
     this._outImageDate = new ImageData(this._width, this._height)
   }
 
@@ -63,8 +64,8 @@ export default class VideoKeyScene extends Scene {
     }
 
     if (this.video1.readyState == 4) {
-
-      if (this._c % 2 === 0) {
+      const now = performance.now()
+      if (now - this._time >= 30) {
         let gl = GL.gl
         GL.enable(GL.DEPTH_TEST);
         GL.setMatrices(this.cameraOrtho)
@@ -80,13 +81,16 @@ export default class VideoKeyScene extends Scene {
         this._view.render(this.videoTexture, this.videoTexture2)
         if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE) {
           gl.readPixels(0, 0, this._width, this._height, gl.RGBA, gl.UNSIGNED_BYTE, this._readPixelData);
+          //gl.readPixels(0, 0, this._width, this._height, gl.RGB, gl.UNSIGNED_BYTE, this._readPixelData2);
           this._outImageDate.data.set(this._readPixelData)
           this.targetCanvasCtx.putImageData(this._outImageDate, 0, 0)
         }
         this.fbo.unbind();
+
+        this._time = now
       }
-      this._c++
     }
+    this.onAfterRender()
   }
 
   resize() {
@@ -95,12 +99,24 @@ export default class VideoKeyScene extends Scene {
     }
   }
 
+  get canvas(){
+    return this.$targetCanvas
+  }
+
+  get imageData(){
+    return this._outImageDate
+  }
+
   get texture() {
     return this.fbo.getTexture()
   }
 
   get pixels() {
-    return this._pixels
+    return this._readPixelData
+  }
+
+  getDataURL(enc, q){
+    return this.$targetCanvas.toDataURL(enc, q);
   }
 
   get view(){

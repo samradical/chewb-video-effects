@@ -26,6 +26,8 @@ const Utils = {
     x = Number(x.toFixed(1));
     y = Number(y.toFixed(1));
 
+    scale *= .5
+
     // set el css
     el.style.transform = 'scale3d(' + scale + ', ' + scale + ', 1) translate3d(' + x + 'px,' + y + 'px,0)'
     el.style.transformOrigin = '0% 0% 0px'

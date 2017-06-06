@@ -1,11 +1,3 @@
-import glsl from "glslify";
-const frag = glsl`
-
-// basic.frag
-
-#define SHADER_NAME BASIC_FRAGMENT
-
-
 precision mediump float;
 varying vec2 vTextureCoord;
 uniform float time;
@@ -18,28 +10,12 @@ uniform float uBrightness;
 uniform float uSaturation;
 uniform float uHue;
 
-uniform float uContrastOne;
-uniform float uBrightnessOne;
-uniform float uSaturationOne;
-uniform float uHueOne;
-
-uniform float uContrastTwo;
-uniform float uBrightnessTwo;
-uniform float uSaturationTwo;
-uniform float uHueTwo;
-
 uniform int uKeyVideoIndex; //one being keyed
 uniform float uMixRatio;
 uniform float uThreshold;
-uniform vec3 uKeyColor;
+uniform float uKeyColor;
 
-uniform int uBlendMode;
-uniform float uBlendMix;
-uniform float uBlendOpacity;
-
-
-
- #define TAU 6.28318530718
+#define TAU 6.28318530718
 #pragma glslify: blend = require(./glsl/all);
 
  vec3 toHue(vec3 rgb, float adjustment) {
@@ -77,17 +53,17 @@ void main(void) {
     vec3 texel1 = texture2D(texture, st).rgb;
     vec3 texel2 = texture2D(texture2, st).rgb;
 
-    vec3 colorCorrectionOne = toHue(texel1, uHueOne * TAU);
-    vec3 colorCorrectionTwo = toHue(texel2, uHueTwo * TAU);
+    vec3 colorCorrectionOne = toHue(texel1, uHue * TAU);
+    vec3 colorCorrectionTwo = toHue(texel2, uHue * TAU);
 
-    colorCorrectionOne = changeSaturation(colorCorrectionOne, uSaturationOne);
-    colorCorrectionOne = (colorCorrectionOne - 0.5) * (uContrastOne + 1.0) + 0.5;
-    colorCorrectionOne = colorCorrectionOne + uBrightnessOne;
+    colorCorrectionOne = changeSaturation(colorCorrectionOne, uSaturation);
+    colorCorrectionOne = (colorCorrectionOne - 0.5) * (uContrast + 1.0) + 0.5;
+    colorCorrectionOne = colorCorrectionOne + uBrightness;
     colorCorrectionOne = mix(texel1, colorCorrectionOne, uColorEffectsOne);
 
-    colorCorrectionTwo = changeSaturation(colorCorrectionTwo, uSaturationTwo);
-    colorCorrectionTwo = (colorCorrectionTwo - 0.5) * (uContrastTwo + 1.0) + 0.5;
-    colorCorrectionTwo = colorCorrectionTwo + uBrightnessTwo;
+    colorCorrectionTwo = changeSaturation(colorCorrectionTwo, uSaturation);
+    colorCorrectionTwo = (colorCorrectionTwo - 0.5) * (uContrast + 1.0) + 0.5;
+    colorCorrectionTwo = colorCorrectionTwo + uBrightness;
     colorCorrectionTwo = mix(texel2, colorCorrectionTwo, uColorEffectsTwo);
 
     vec3 keyedVideo = colorCorrectionOne;
@@ -98,12 +74,8 @@ void main(void) {
         mixedVideo = colorCorrectionOne;
     }
 
-    float cVal = chromaVal(keyedVideo, uKeyColor, uMixRatio, uThreshold);
+    float cVal = chromaVal(keyedVideo, mixedVideo, uMixRatio, uThreshold);
     vec3 col = mix(keyedVideo, mixedVideo, cVal);
-    vec3 color = mix(col,blend(uBlendMode, keyedVideo, mixedVideo, uBlendOpacity),uBlendMix);
-    gl_FragColor = vec4(color, 1.0);
+
+    gl_FragColor = vec4(col, 1.0);
 }
-
-`
-
-export default frag

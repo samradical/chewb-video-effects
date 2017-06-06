@@ -1,4 +1,6 @@
-const F = `
+import glsl from "glslify";
+const vert = glsl`
+
 
 // basic.vert
 
@@ -19,4 +21,4 @@ void main(void) {
 
 `
 
-export default F
+export default vert

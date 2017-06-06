@@ -9,9 +9,14 @@
     "url": ".git",
     "web": "/"
   },
-  "main": "index.js",
+  "scripts": {
+    "build": " browserify index.js -o dist/bundle.js -t [ babelify --presets [ es2015 stage-1 ] --plugins [ glslify ] ] "
+  },
+  "main": "dist/bundle.js",
   "dependencies": {
+    "babel-plugin-glslify": "^2.0.0",
     "gl-matrix": "^2.3.2",
+    "glslify": "^5.1.0",
     "scheduling": "^1.0.3"
   },
   "devDependencies": {
@@ -19,22 +24,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "babel-preset-stage-1": "^6.3.13",
     "babelify": "^7.2.0",
-    "browserify": "^11.1.0",
-    "glslify": "^5.1.0"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "babelify",
-        {
-          "presets": [
-            "es2015",
-            "stage-1"
-          ]
-        },
-        "glslify"
-      ]
-    ]
+    "browserify": "^11.1.0"
   },
   "keywords": [],
   "bugs": {

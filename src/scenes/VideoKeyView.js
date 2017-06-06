@@ -3,6 +3,7 @@
 import alfrid, { View } from '../../lib/alfrid'
 let GL = alfrid.GL;
 
+
 import vs from "./basic_vert"
 import fs from "./video_frag"
 
@@ -38,6 +39,7 @@ class VideoKeyView extends alfrid.View {
         value: _o.value
       })
     })
+    console.log(this._uniforms);
     this._uniformLength = this._uniforms.length
   }
 
